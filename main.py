@@ -3,6 +3,11 @@
 import argparse
 import pathlib
 import ruamel.yaml
+
+import lib.lint as amlint
+
+
+
 yaml = ruamel.yaml.YAML(typ='rt') 
 yaml.brace_single_entry_mapping_in_flow_sequence = True
 yaml.preserve_quotes = True
@@ -16,6 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("source_dir", type=str)
 parser.add_argument("dest_file", type=str)
 parser.add_argument("--overwrite", action="store_true")
+parser.add_argument("--force_nme", action="store_true")
 
 args = parser.parse_args()
 
@@ -38,11 +44,13 @@ source_files = [source_file for source_file in source_path.glob('*.yaml')]
 # We want to process these in order; ideally, the order would be independent, but it's nice to be able to enforce an order
 source_files.sort()
 
-with open(dest_file, "w",encoding="utf-8") as dest:
+with open(dest_file, "w", encoding="utf-8") as dest:
 	first = True
 	for source_file in source_files:
 		with open(source_file, encoding="utf-8") as s:
 			y = yaml.load(s)
+
+			amlint.lint(y, source_file)
 
 			
 			if (first):
