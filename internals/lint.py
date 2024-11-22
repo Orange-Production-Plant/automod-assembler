@@ -36,9 +36,9 @@ def lint(rule, file : pathlib.Path):
 
     for stage in lint_stages:
         is_rule_passed, msg = stage(rule, file)
-        
+
         if (not is_rule_passed):
             print("Warning in file {}. {}".format(file.name, msg))
-            is_okay = False
+            is_lint_okay = False
     
     return is_lint_okay

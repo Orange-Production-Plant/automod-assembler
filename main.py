@@ -44,6 +44,11 @@ source_files = [source_file for source_file in source_path.glob('*.yaml')]
 # We want to process these in order; ideally, the order would be independent, but it's nice to be able to enforce an order
 source_files.sort()
 
+
+num_processed = 0
+num_disabled = 0
+num_lint_fails = 0
+
 with open(dest_file, "w", encoding="utf-8") as dest:
 	first = True
 	for source_file in source_files:
@@ -51,22 +56,28 @@ with open(dest_file, "w", encoding="utf-8") as dest:
 			# Step 1: Load YAML file as Python object
 			y = yaml.load(s)
 			
-
 			# Step 2: Validate source file against rules
-			l.lint(y, source_file)
+			if not l.lint(y, source_file):
+				num_lint_fails += 1
 
 			# Step 3: Apply transformations
 			if (args.force_nme):
 				y["moderators_exempt"] = False
 			
-
-			if ".disable" not in source_file.suffixes:
-				# Step 4: Write result
+			# Step 4: Write result
+			if ".disable" not in source_file.suffixes:	
 				if (first):
 					first = False
 				else:
 					dest.write("---\n")
 				yaml.dump(y, dest)
+			else:
+				num_disabled += 1
 			
-			
-			
+			# Step 5: Count this rule as processed!
+			num_processed +=1
+
+
+# Finally, let's print a report
+
+print("All done! In total {} files were processed. {} of them are disabled, and {} files failed to pass lint checks.".format(num_processed, num_disabled, num_lint_fails))
