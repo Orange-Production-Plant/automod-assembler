@@ -4,7 +4,7 @@ import argparse
 import pathlib
 import ruamel.yaml
 
-import lib.lint as amlint
+import internals.lint as l
 
 
 
@@ -50,7 +50,7 @@ with open(dest_file, "w", encoding="utf-8") as dest:
 		with open(source_file, encoding="utf-8") as s:
 			y = yaml.load(s)
 
-			amlint.lint(y, source_file)
+			l.lint(y, source_file)
 
 			
 			if (first):
