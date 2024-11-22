@@ -22,6 +22,7 @@ parser.add_argument("source_dir", type=str)
 parser.add_argument("dest_file", type=str)
 parser.add_argument("--overwrite", action="store_true")
 parser.add_argument("--force_nme", action="store_true")
+parser.add_argument("--emit_filenames", action="store_false")
 
 args = parser.parse_args()
 
@@ -64,6 +65,9 @@ with open(dest_file, "w", encoding="utf-8") as dest:
 			if (args.force_nme):
 				y["moderators_exempt"] = False
 			
+			if (args.emit_filenames):
+				y.yaml_set_start_comment(source_file.name)
+
 			# Step 4: Write result
 			if ".disable" not in source_file.suffixes:	
 				if (first):
