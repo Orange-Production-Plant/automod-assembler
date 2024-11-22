@@ -48,16 +48,25 @@ with open(dest_file, "w", encoding="utf-8") as dest:
 	first = True
 	for source_file in source_files:
 		with open(source_file, encoding="utf-8") as s:
+			# Step 1: Load YAML file as Python object
 			y = yaml.load(s)
+			
 
+			# Step 2: Validate source file against rules
 			l.lint(y, source_file)
 
+			# Step 3: Apply transformations
+			if (args.force_nme):
+				y["moderators_exempt"] = False
 			
-			if (first):
-				first = False
-			else:
-				dest.write("---\n")
-			yaml.dump(y, dest)
+
+			if ".disable" not in source_file.suffixes:
+				# Step 4: Write result
+				if (first):
+					first = False
+				else:
+					dest.write("---\n")
+				yaml.dump(y, dest)
 			
 			
 			
