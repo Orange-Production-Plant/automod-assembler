@@ -65,7 +65,8 @@ with open(dest_file, "w", encoding="utf-8") as dest:
 			if (args.force_nme):
 				y["moderators_exempt"] = False
 			
-			if (args.emit_filenames):
+			# this is correct; I should find a better name scheme for this
+			if (args.no_emit_filenames):
 				y.yaml_set_start_comment(source_file.name)
 
 			# Step 4: Write result
