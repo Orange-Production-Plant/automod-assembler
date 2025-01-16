@@ -22,7 +22,7 @@ parser.add_argument("source_dir", type=str)
 parser.add_argument("dest_file", type=str)
 parser.add_argument("--overwrite", action="store_true")
 parser.add_argument("--force_nme", action="store_true")
-parser.add_argument("--emit_filenames", action="store_false")
+parser.add_argument("--no_emit_filenames", action="store_false")
 
 args = parser.parse_args()
 
